@@ -2,40 +2,62 @@
   "expo": {
     "name": "TouristGuide",
     "slug": "TouristGuide",
+    "scheme": "touristguide",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
+    "icon": "./assets/images/Tg.png",
     "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
+    "experiments": {
+      "newArchEnabled": true
+    },
+    "linking": {
+      "prefixes": ["votreapp://", "https://votreapp.com"],
+      "config": {
+        "screens": {
+          "guides": "guides"
+        }
+      }
+    },
+    "splash": {
+      "image": "./assets/images/Tg.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
     "android": {
+      "package": "com.mada.TouristGuide",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/Tg.png",
         "backgroundColor": "#ffffff"
       }
     },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+    "ios": {
+      "bundleIdentifier": "com.mada.TouristGuide",
+      "buildNumber": "1.0.0",
+      "supportsTablet": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "30359f0f-8543-427a-b39f-89a8313196cd"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/30359f0f-8543-427a-b39f-89a8313196cd"
     },
     "plugins": [
-      "expo-router",
       [
-        "expo-splash-screen",
+        "expo-build-properties",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "android": {
+            "newArchEnabled": true
+          },
+          "ios": {
+            "newArchEnabled": true
+          }
         }
       ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
+    ]
   }
 }

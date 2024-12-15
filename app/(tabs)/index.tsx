@@ -1,74 +1,122 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { View, Text, Image, TextInput, StyleSheet, FlatList } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { useAuth } from '@/contexts/auth';
+import { Redirect } from 'expo-router';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const data = [
+  { id: '1', title: 'Baobab', image: require('@/assets/images/maki.jpg'), likes: 25, comments: 12, description: 'Un arbre majestueux.' },
+  { id: '2', title: 'Lémurien', image: require('@/assets/images/murien.jpg'), likes: 30, comments: 15, description: 'Un animal endémique de Madagascar.' },
+  { id: '3', title: 'Lémurien', image: require('@/assets/images/mu.jpg'), likes: 30, comments: 15, description: 'Un animal endémique de Madagascar.' },
+  { id: '4', title: 'Lémurien que j ai vu quelquepart à madagascar', image: require('@/assets/images/OIP.jpg'), likes: 30, comments: 15, description: 'Un animal endémique de Madagascar.' },
+  { id: '5', title: 'Lémurien', image: require('@/assets/images/R.jpg'), likes: 30, comments: 15, description: 'Un animal endémique de Madagascar.' },
+  { id: '6', title: 'Lémurien', image: require('@/assets/images/m.jpg'), likes: 30, comments: 15, description: 'Un animal endémique de Madagascar.' },
+];
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+function HomeScreen() {
+  const { user, loading } = useAuth();
+
+  // Si l'application est en train de charger, afficher un indicateur de chargement
+  if (loading) {
+    return <Text>Chargement...</Text>;
+  }
+  if (user) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Image source={require('@/assets/images/Tg.png')} style={styles.logo} />
+          <Text style={styles.appName}>Tourist Guide</Text>
+        </View>
+        <View style={styles.separator} />
+        <TextInput style={styles.searchInput} placeholder="rechercher ici..." />
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Image source={item.image} style={styles.cardImage} />
+              <Text style={styles.description}>{item.description}</Text>
+              <View style={styles.cardFooter}>
+                <FontAwesome name="thumbs-up" size={16} color="gray" />
+                <Text>{item.likes}</Text>
+                <FontAwesome name="comment" size={16} color="gray" />
+                <Text>{item.comments}</Text>
+              </View>
+            </View>
+          )}
+          keyExtractor={item => item.id}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+      </View>
+    );
+  }
+  else {
+    return <Redirect href="/auth/login" />;
+  }
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    padding: 10,
+  },
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'flex-start',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  separator: {
+    height: 1,
+    backgroundColor: '#dcdcdc',
+    marginVertical: 10,
+    width: '100%',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  searchInput: {
+    height: 40,
+    borderColor: '#dcdcdc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  logo: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+  },
+  appName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: 0,
+  },
+  card: {
+    marginBottom: 15,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    overflow: 'hidden',
+    alignItems: 'center',
+  },
+  cardImage: {
+    width: '100%',
+    height: 200,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginVertical: 5,
+  },
+  description: {
+    fontSize: 14,
+    color: 'gray',
+    marginBottom: 5,
+    paddingHorizontal: 10,
+    textAlign: 'center',
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    padding: 5,
   },
 });
+
+export default HomeScreen;
